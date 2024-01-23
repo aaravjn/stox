@@ -2,6 +2,8 @@ from datetime import date, timedelta
 import requests
 from zipfile import ZipFile
 import os
+from bsestox.models import Stocks
+import csv
 
 HISTORY_LENGTH = 5
 
@@ -15,6 +17,7 @@ def import_data():
         file_name = f"{str(dt.day).zfill(2)}{str(dt.month).zfill(2)}{str(dt.year)[2:]}"
         
         if os.path.exists(f"./bse_stocks_data/EQ{file_name}.CSV"):
+            print(f"File: {file_name} already exists")
             return
         
         url = f'https://www.bseindia.com/download/BhavCopy/Equity/EQ{file_name}_CSV.ZIP'
@@ -46,14 +49,41 @@ def import_data():
                 zObject.extract(f"EQ{file_name}.CSV", path="./bse_stocks_data/")
             
             os.remove(f'./bse_stocks_data/{file_name}.zip')
+            insert_data(f"./bse_stocks_data/EQ{file_name}.CSV")
+            print("Completed the insertion")
+
         else:
             print("Could not import data for:", dt.strftime("%d-%m-%Y"))
-
+        
         i += 1
-    
     print("\n")
+    return
 
 
-def insert_data():
-    print("\nInserting data in the database")
+def insert_data(file_name):
+    print("Inserting data of the file:", file_name)
 
+    with open(file_name, 'r') as f:
+        csvFile = list(csv.reader(f))
+        csvFile.pop(0)
+        for lines in csvFile:
+
+            if Stocks.objects.filter(name=str(lines[1]).strip()).exists():
+                stock = Stocks.objects.filter(name=str(lines[1]).strip())[0]
+                
+                stock.val_open += ' ' + str(lines[4])
+                stock.val_high += ' ' + str(lines[5])
+                stock.val_low += ' ' + str(lines[6])
+                stock.val_close += ' ' + str(lines[7])
+                
+                stock.save()                
+            else:
+                stock = Stocks.objects.create(
+                    code=str(lines[0]),
+                    name=str(lines[1]).strip(),
+                    val_open=str(lines[4]),
+                    val_high=str(lines[5]),
+                    val_low=str(lines[6]),
+                    val_close=str(lines[7])
+                )
+    return

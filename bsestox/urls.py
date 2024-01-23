@@ -1,9 +1,8 @@
 from django.urls import path
-from .startup import import_data, insert_data
+from .startup import import_data
 
 urlpatterns = [
     
 ]
 
-import_data()
-insert_data()
+# import_data()
