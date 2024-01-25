@@ -1,1 +1,1 @@
-default_app_config = 'bsestox.apps.BsestoxConfig'
+default_app_config = "bsestox.apps.BsestoxConfig"

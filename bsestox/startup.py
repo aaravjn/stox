@@ -7,6 +7,7 @@ import csv
 
 HISTORY_LENGTH = 5
 
+
 def import_data():
     print("Downloading BSE stocks data....")
 
@@ -16,12 +17,12 @@ def import_data():
         dt_today = date.today()
         dt = dt_today - timedelta(i)
         file_name = f"{str(dt.day).zfill(2)}{str(dt.month).zfill(2)}{str(dt.year)[2:]}"
-        
+
         if os.path.exists(f"./bse_stocks_data/EQ{file_name}.CSV"):
             print(f"File: {file_name} already exists")
             return
-        
-        url = f'https://www.bseindia.com/download/BhavCopy/Equity/EQ{file_name}_CSV.ZIP'
+
+        url = f"https://www.bseindia.com/download/BhavCopy/Equity/EQ{file_name}_CSV.ZIP"
 
         # Including headers to make the request look like a browser request
         # BSE blocks all non-browser requests (This is a speculation)
@@ -36,55 +37,53 @@ def import_data():
             "Sec-Fetch-Mode": "navigate",
             "Sec-Fetch-Site": "none",
             "Sec-Fetch-User": "?1",
-            "TE": "trailers"
+            "TE": "trailers",
         }
         response = requests.get(url=url, headers=header)
 
         if response.status_code == 200:
-            with open(f'./bse_stocks_data/{file_name}.zip', 'wb') as f:
+            with open(f"./bse_stocks_data/{file_name}.zip", "wb") as f:
                 f.write(response.content)
             print("Succesfully downloaded the file", file_name)
             count += 1
 
-            with ZipFile(f'./bse_stocks_data/{file_name}.zip', 'r') as zObject:
+            with ZipFile(f"./bse_stocks_data/{file_name}.zip", "r") as zObject:
                 zObject.extract(f"EQ{file_name}.CSV", path="./bse_stocks_data/")
-            
-            os.remove(f'./bse_stocks_data/{file_name}.zip')
+
+            os.remove(f"./bse_stocks_data/{file_name}.zip")
             insert_data(file_name, dt)
             print("Completed the insertion")
         else:
             print("Could not import data for:", dt.strftime("%d-%m-%Y"))
-        
+
         i += 1
     print("\n")
     return
 
 
 def insert_data(file_date_sp_name, dt):
-
     file_name = f"./bse_stocks_data/EQ{file_date_sp_name}.CSV"
     print("Inserting data of the file:", file_name)
 
-    with open(file_name, 'r') as f:
+    with open(file_name, "r") as f:
         csvFile = list(csv.reader(f))
         csvFile.pop(0)
         for lines in csvFile:
-
             if Stocks.objects.filter(name=str(lines[1]).strip()).exists():
                 stock = Stocks.objects.get(name=str(lines[1]).strip())
-                
-                stock.val_open += ' ' + str(lines[4])
-                stock.val_high += ' ' + str(lines[5])
-                stock.val_low += ' ' + str(lines[6])
-                stock.val_close += ' ' + str(lines[7])
-                
+
+                stock.val_open += " " + str(lines[4])
+                stock.val_high += " " + str(lines[5])
+                stock.val_low += " " + str(lines[6])
+                stock.val_close += " " + str(lines[7])
+
                 stock.save()
 
                 curr_stock = StocksCurrVal.objects.get(name=stock)
                 if curr_stock.date < dt:
                     curr_stock.val_curr = str(lines[7])
                     curr_stock.date = dt
-                
+
             else:
                 stock = Stocks.objects.create(
                     code=str(lines[0]),
@@ -92,12 +91,10 @@ def insert_data(file_date_sp_name, dt):
                     val_open=str(lines[4]),
                     val_high=str(lines[5]),
                     val_low=str(lines[6]),
-                    val_close=str(lines[7])
+                    val_close=str(lines[7]),
                 )
 
                 StocksCurrVal.objects.create(
-                    name=stock,
-                    date=dt,
-                    val_curr=str(lines[7])
+                    name=stock, date=dt, val_curr=str(lines[7])
                 )
     return

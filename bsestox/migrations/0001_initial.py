@@ -5,38 +5,71 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Stocks',
+            name="Stocks",
             fields=[
-                ('code', models.CharField(max_length=10)),
-                ('name', models.CharField(max_length=100, primary_key=True, serialize=False)),
-                ('val_open', models.TextField(null=True)),
-                ('val_close', models.TextField(null=True)),
-                ('val_high', models.TextField(null=True)),
-                ('val_low', models.TextField(null=True)),
+                ("code", models.CharField(max_length=10)),
+                (
+                    "name",
+                    models.CharField(max_length=100, primary_key=True, serialize=False),
+                ),
+                ("val_open", models.TextField(null=True)),
+                ("val_close", models.TextField(null=True)),
+                ("val_high", models.TextField(null=True)),
+                ("val_low", models.TextField(null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='FavStocks',
+            name="FavStocks",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reference', to='bsestox.stocks', unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="reference",
+                        to="bsestox.stocks",
+                        unique=True,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='StocksCurrVal',
+            name="StocksCurrVal",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('val_curr', models.FloatField()),
-                ('date', models.DateField()),
-                ('name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='related_stock', to='bsestox.stocks', unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("val_curr", models.FloatField()),
+                ("date", models.DateField()),
+                (
+                    "name",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="related_stock",
+                        to="bsestox.stocks",
+                        unique=True,
+                    ),
+                ),
             ],
         ),
     ]

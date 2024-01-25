@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: bash -c "cd ./stox && python manage.py makemigrations && python manage.py migrate && python manage.py runserver --noreload"
+    container_name: stock_server
+    volumes:
+      - .:/stock_server
+    ports:
+      - "8000:8000"

@@ -5,15 +5,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('bsestox', '0001_initial'),
+        ("bsestox", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='stockscurrval',
-            name='name',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='bsestox.stocks'),
+            model_name="stockscurrval",
+            name="name",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to="bsestox.stocks"
+            ),
         ),
     ]

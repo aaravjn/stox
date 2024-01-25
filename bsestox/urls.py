@@ -8,5 +8,5 @@ urlpatterns = [
     path("favourite-stocks", vi.returnFavStocks),
     path("add-to-fav", vi.addCurrStock),
     path("delete-from-fav", vi.deleteFavStock),
-    path("top-stocks", vi.getTopStocks)
+    path("top-stocks", vi.getTopStocks),
 ]

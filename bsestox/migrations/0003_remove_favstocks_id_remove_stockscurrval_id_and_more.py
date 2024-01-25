@@ -5,28 +5,37 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('bsestox', '0002_alter_stockscurrval_name'),
+        ("bsestox", "0002_alter_stockscurrval_name"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='favstocks',
-            name='id',
+            model_name="favstocks",
+            name="id",
         ),
         migrations.RemoveField(
-            model_name='stockscurrval',
-            name='id',
+            model_name="stockscurrval",
+            name="id",
         ),
         migrations.AlterField(
-            model_name='favstocks',
-            name='name',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='bsestox.stocks'),
+            model_name="favstocks",
+            name="name",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                serialize=False,
+                to="bsestox.stocks",
+            ),
         ),
         migrations.AlterField(
-            model_name='stockscurrval',
-            name='name',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='bsestox.stocks'),
+            model_name="stockscurrval",
+            name="name",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                serialize=False,
+                to="bsestox.stocks",
+            ),
         ),
     ]
