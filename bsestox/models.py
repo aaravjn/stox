@@ -14,6 +14,12 @@ class Stocks(models.Model):
         return str(self.name)
 
 class FavStocks(models.Model):
-    name = models.ForeignKey(
-        "Stocks", on_delete=models.CASCADE, related_name="reference", to_field="name"
-    )
+    name = models.OneToOneField(Stocks, on_delete=models.CASCADE, primary_key=True)
+    def __str__(self):
+        return str(self.name)
+
+
+class StocksCurrVal(models.Model):
+    name = models.OneToOneField(Stocks, on_delete=models.CASCADE, primary_key=True)
+    val_curr = models.FloatField()
+    date = models.DateField()
